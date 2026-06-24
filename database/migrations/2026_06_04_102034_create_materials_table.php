@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->string('title');
-            $table->enum('type', ['book', 'video', 'course'])->default('book');
-            $table->string('cover_image')->nullable();
-            $table->unsignedTinyInteger('progress')->default(0);
+            $table->string('type');
+            $table->string('cover_path')->nullable();
+            $table->unsignedInteger('estimated_minutes')->nullable();
             $table->timestamps();
         });
     }

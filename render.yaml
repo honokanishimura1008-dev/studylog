@@ -1,0 +1,46 @@
+services:
+  - type: web
+    name: studylog
+    env: php
+    buildCommand: composer install --no-dev --optimize-autoloader && php artisan key:generate && php artisan migrate --force
+    startCommand: php artisan serve --host=0.0.0.0 --port=$PORT
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: false
+      - key: APP_KEY
+        generateValue: true
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_HOST
+        fromDatabase:
+          name: studylog-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: studylog-db
+          property: port
+      - key: DB_DATABASE
+        fromDatabase:
+          name: studylog-db
+          property: database
+      - key: DB_USERNAME
+        fromDatabase:
+          name: studylog-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: studylog-db
+          property: password
+      - key: CACHE_DRIVER
+        value: file
+      - key: SESSION_DRIVER
+        value: file
+      - key: QUEUE_CONNECTION
+        value: sync
+
+databases:
+  - name: studylog-db
+    databaseName: studylog
+    user: studylog
