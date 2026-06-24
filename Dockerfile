@@ -33,5 +33,5 @@ RUN chown -R www-data:www-data /app/storage /app/bootstrap/cache
 # Expose port
 EXPOSE 8080
 
-# Start PHP built-in server
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8080"]
+# Run migrations and start server
+CMD sh -c "php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=8080"
