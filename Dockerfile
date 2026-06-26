@@ -1,6 +1,6 @@
 FROM php:8.4-cli
 
-# Install system dependencies + Node.js
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
     git \
     curl \
@@ -10,8 +10,11 @@ RUN apt-get update && apt-get install -y \
     libpq-dev \
     zip \
     unzip \
-    nodejs \
-    npm \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Node.js 20 LTS
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y nodejs \
     && rm -rf /var/lib/apt/lists/*
 
 # Install PHP extensions
@@ -30,7 +33,7 @@ COPY . /app
 RUN composer install --no-dev --optimize-autoloader --no-interaction
 
 # Install Node dependencies and build assets
-RUN npm ci && npm run build && rm -rf node_modules
+RUN npm install && npm run build && rm -rf node_modules
 
 # Set permissions
 RUN chown -R www-data:www-data /app/storage /app/bootstrap/cache
