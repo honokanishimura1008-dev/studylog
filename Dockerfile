@@ -1,6 +1,6 @@
 FROM php:8.4-cli
 
-# Install system dependencies
+# Install system dependencies + Node.js
 RUN apt-get update && apt-get install -y \
     git \
     curl \
@@ -10,6 +10,8 @@ RUN apt-get update && apt-get install -y \
     libpq-dev \
     zip \
     unzip \
+    nodejs \
+    npm \
     && rm -rf /var/lib/apt/lists/*
 
 # Install PHP extensions
@@ -24,8 +26,11 @@ WORKDIR /app
 # Copy application files
 COPY . /app
 
-# Install dependencies
+# Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader --no-interaction
+
+# Install Node dependencies and build assets
+RUN npm ci && npm run build && rm -rf node_modules
 
 # Set permissions
 RUN chown -R www-data:www-data /app/storage /app/bootstrap/cache
